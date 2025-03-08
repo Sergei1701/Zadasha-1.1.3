@@ -21,22 +21,21 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
-            System.out.println("DataBase has been created");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void dropUsersTable() {
-        String sql = "DROP TABLE user1";
+        String sql = "DROP TABLE IF EXISTS user1";
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
-            System.out.println("DataBAse has been deleted");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO user1 (NAME, LASTNAME, AGE) VALUES (?, ?, ?)";
@@ -65,10 +64,10 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM user1";
-        User user = new User();
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
             while (resultSet.next()) {
+                User user = new User();
                 user.setId(resultSet.getLong("ID"));
                 user.setName(resultSet.getString("NAME"));
                 user.setLastName(resultSet.getString("LASTNAME"));
